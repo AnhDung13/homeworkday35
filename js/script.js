@@ -16,6 +16,13 @@ const txtBtn = dropdown.querySelector(".txt-btn");
 const pdfBtn = dropdown.querySelector(".pdf-btn");
 const content = document.querySelector(".content");
 const fileName = document.querySelector("#file-name");
+
+content.addEventListener("paste", function (e) {
+  e.preventDefault();
+  const text = e.clipboardData.getData("text");
+  document.execCommand("insertHTML", false, text);
+});
+
 newFileBtn.onclick = function () {
   content.innerHTML = "";
 };
@@ -72,9 +79,10 @@ const count = document.querySelector(".count");
 count.children[0].append(charCount);
 count.children[1].append(wordCount);
 content.oninput = function () {
-  charCount = content.innerText.trim().replace(" ", "").length;
+  const textContent = content.innerText;
+  charCount = textContent.replace(/\s/g, "").length;
   count.children[0].childNodes[1].nodeValue = charCount;
-  wordCount = content.innerText.trim().split(" ");
+  wordCount = textContent.trim().split(/\s+/);
   if (wordCount[0] === "") {
     wordCount = 0;
     count.children[1].childNodes[1].nodeValue = wordCount;
